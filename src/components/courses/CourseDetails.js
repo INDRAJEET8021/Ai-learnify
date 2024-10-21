@@ -97,7 +97,7 @@ export default function CourseDetails() {
 
         {/* Scroll Progress Indicator */}
       </Box>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

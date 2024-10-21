@@ -12,6 +12,7 @@ import AuthPage from "./pages/AuthPage";
 import AdaptiveLearning from "./pages/AdaptiveLearning";
 import CourseDetails from "./components/courses/CourseDetails";
 import ScrollProgress from "./components/courses/ScrollProgress";
+import QuizReport from "./components/quizes/QuizReport";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/progress" element={<AdaptiveLearning />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/course-details/:courseId" element={<CourseDetails />} />
+        <Route path="/quiz-report" element={<QuizReport/>}/>
          </Routes>
     </Router>
   );

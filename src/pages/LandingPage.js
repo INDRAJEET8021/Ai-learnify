@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../components/Navbar'; // Import the Navbar component
 import Footer from '../components/Footer'; // Import Footer component
 import { Container, Typography, Button, Grid, Paper, Box } from '@mui/material';
+import ChatButton from '../components/ChatButton ';
 
 export default function LandingPage() {
   return (
@@ -61,6 +62,7 @@ export default function LandingPage() {
             Sign Up Now
           </Button>
         </Box>
+      <ChatButton/>
       </Container>
 
       <Footer />

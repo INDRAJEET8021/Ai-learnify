@@ -1,38 +1,132 @@
-// src/Chatbot.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Container,
+  Divider,
+  TextField,
+  Typography,
+} from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import RobotIcon from '@mui/icons-material/EmojiEmotions';
+import UserIcon from '@mui/icons-material/Person';
+import ChatIcon from '@mui/icons-material/Chat';
+import SupportIcon from '@mui/icons-material/Support';
+import MicIcon from '@mui/icons-material/Mic';
+import ChatButton from '../components/ChatButton ';
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [typing, setTyping] = useState(false);
+  const [recognition, setRecognition] = useState(null);
+
+  useEffect(() => {
+    // Check for browser support
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognitionInstance = new SpeechRecognition();
+
+      recognitionInstance.interimResults = false;
+      recognitionInstance.lang = 'en-US';
+
+      recognitionInstance.onresult = (event) => {
+        const spokenText = event.results[0][0].transcript;
+        setInput(spokenText);
+        handleSend();
+      };
+
+      setRecognition(recognitionInstance);
+    } else {
+      alert('Sorry, your browser does not support speech recognition.');
+    }
+  }, []);
 
   const handleSend = () => {
-    setMessages([...messages, { text: input, sender: 'user' }]);
-    setInput('');
-    // Here you would typically call your AI chatbot API
+    if (input.trim()) {
+      setMessages((prev) => [...prev, { text: input, sender: 'user' }]);
+      setInput('');
+      setTyping(true);
+
+      // Simulate a delay for the bot's response
+      setTimeout(() => {
+        const botResponse = "This is a sample response from AI."; // Mock response
+        setMessages((prev) => [...prev, { text: botResponse, sender: 'bot' }]);
+        setTyping(false);
+      }, 1000); // Simulate bot response delay
+    }
+  };
+
+  const handleMicClick = () => {
+    if (recognition) {
+      recognition.start();
+    }
   };
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 min-h-screen">
-      <h2 className="text-2xl mt-10">Chat with AI</h2>
-      <div className="border border-gray-300 rounded w-full max-w-md h-80 p-4 overflow-y-auto">
-        {messages.map((msg, index) => (
-          <div key={index} className={`mb-2 ${msg.sender === 'user' ? 'text-right' : 'text-left'}`}>
-            <span className={`px-2 py-1 rounded ${msg.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}>
-              {msg.text}
-            </span>
-          </div>
-        ))}
-      </div>
-      <div className="flex w-full max-w-md mt-4">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="border border-gray-300 rounded flex-grow px-2"
-          placeholder="Type your message..."
-        />
-        <button onClick={handleSend} className="bg-blue-600 text-white px-4 py-2 rounded ml-2">Send</button>
-      </div>
+    <div>
+      <Navbar />
+      <Container sx={{ padding: '20px', minHeight: '100vh', backgroundColor: '#f9f9f9' }}>
+        <Typography variant="h4" align="center" sx={{ marginBottom: '20px', fontWeight: 'bold', color: '#333' }}>
+          <ChatIcon sx={{ fontSize: 30, verticalAlign: 'middle', marginRight: 1 }} />
+          AI Chatbot
+          <SupportIcon sx={{ fontSize: 30, verticalAlign: 'middle', marginLeft: 1 }} />
+        </Typography>
+        <Card sx={{ backgroundColor: '#ffffff', borderRadius: '10px', padding: '20px', boxShadow: 2, maxWidth: '600px', margin: '0 auto' }}>
+          <CardContent sx={{ height: '400px', overflowY: 'auto' }}>
+            {messages.map((msg, index) => (
+              <Box key={index} sx={{ display: 'flex', alignItems: 'center', marginBottom: '10px', justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start' }}>
+                {msg.sender === 'bot' && <Avatar sx={{ marginRight: '10px' }}><RobotIcon /></Avatar>}
+                <Box sx={{ backgroundColor: msg.sender === 'user' ? '#3f51b5' : '#e0e0e0', color: msg.sender === 'user' ? '#fff' : '#000', padding: '10px 15px', borderRadius: '20px', maxWidth: '70%', wordWrap: 'break-word' }}>
+                  {msg.text}
+                </Box>
+                {msg.sender === 'user' && <Avatar sx={{ marginLeft: '10px' }}><UserIcon /></Avatar>}
+              </Box>
+            ))}
+            {typing && (
+              <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                <Avatar sx={{ marginRight: '10px' }}><RobotIcon /></Avatar>
+                <Typography variant="body1" sx={{ color: '#000' }}>Typing...</Typography>
+              </Box>
+            )}
+          </CardContent>
+          <Divider />
+          <Box sx={{ display: 'flex', alignItems: 'center', padding: '10px' }}>
+            <TextField
+              variant="outlined"
+              placeholder="Type your message..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+              fullWidth
+              sx={{ marginRight: '10px' }}
+              InputProps={{
+                endAdornment: (
+                  <Button onClick={handleMicClick} sx={{ p: 1 }}>
+                    <MicIcon />
+                  </Button>
+                )
+              }}
+            />
+            <Button
+              variant="contained"
+              onClick={handleSend}
+              sx={{ backgroundColor: '#3f51b5', '&:hover': { backgroundColor: '#303f9f' } }}
+              endIcon={<SendIcon />}
+            >
+              Send
+            </Button>
+          </Box>
+        </Card>
+       
+      </Container>
+      <Footer />
     </div>
   );
 };

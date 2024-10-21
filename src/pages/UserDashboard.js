@@ -6,10 +6,10 @@ import SearchBar from '../components/SearchBar';  // Importing the SearchBar
 
 export default function UserDashboard() {
   return (
-    <>
+    <div>
       {/* Navbar */}
       <Navbar />
-
+      
       {/* Main Dashboard */}
       <Box sx={{ padding: '30px', minHeight: '80vh' }}>
         {/* Welcome Section */}
@@ -26,6 +26,6 @@ export default function UserDashboard() {
 
       {/* Footer */}
       <Footer />
-    </>
+    </div>
   );
 }

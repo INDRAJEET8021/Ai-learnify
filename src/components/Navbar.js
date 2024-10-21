@@ -30,7 +30,8 @@ export default function Navbar() {
     >
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          AI Learning Platform
+          <a href="/">AI Learning Platform</a>
+          
         </Typography>
 
         {/* List Icon for Menu */}
@@ -58,7 +59,7 @@ export default function Navbar() {
             Adaptive Learning
           </MenuItem>
           <MenuItem onClick={() => { handleMenuClose(); navigate("/quiz"); }}>
-            Interactive Quizzes
+            Interactive Quizes
           </MenuItem>
           <MenuItem onClick={() => { handleMenuClose(); navigate("/chatbot"); }}> 
             AI Chatbot

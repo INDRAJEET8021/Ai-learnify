@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, Box, Grid, Card, CardContent, Button, LinearProgress } from '@mui/material';
+import Navbar from '../components/Navbar';
 
 export default function AdaptiveLearning() {
   // Sample data for courses (no backend connection, mock data)
@@ -19,7 +20,9 @@ export default function AdaptiveLearning() {
   ];
 
   return (
-    <Box sx={{ padding: '20px' }}>
+    <div>
+      <Navbar/>
+      <Box sx={{ padding: '20px' }}>
       {/* Introduction Section */}
       <Typography variant="h4" align="center" gutterBottom>
         Adaptive Learning
@@ -111,10 +114,12 @@ export default function AdaptiveLearning() {
         <Typography variant="h5" gutterBottom>
           Test Your Knowledge
         </Typography>
-        <Button variant="outlined" size="large" sx={{ backgroundColor: '#1976d2', color: 'white' }}>
+        <Button href='/quiz' variant="outlined" size="large" sx={{ backgroundColor: '#1976d2', color: 'white' }}>
           Take a Quiz
         </Button>
       </Box>
     </Box>
+    </div>
+   
   );
 }
