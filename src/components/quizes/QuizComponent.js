@@ -3,18 +3,6 @@ import { Box, Button, Typography, Paper, IconButton, TextField } from '@mui/mate
 import QuizReport from './QuizReport'; // Component for showing the report after submission
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 
-// Dummy data for testing
-const quizData = {
-  'AI': [
-    { id: 1, question: 'What is AI?', options: ['Option A', 'Option B', 'Option C', 'Option D'], correctAnswer: 'Option A' },
-    { id: 2, question: 'What is Machine Learning?', options: ['Option A', 'Option B', 'Option C', 'Option D'], correctAnswer: 'Option B' },
-  ],
-  'React': [
-    { id: 1, question: 'What is React?', options: ['Option A', 'Option B', 'Option C', 'Option D'], correctAnswer: 'Option B' },
-    { id: 2, question: 'What are React hooks?', options: ['Option A', 'Option B', 'Option C', 'Option D'], correctAnswer: 'Option C' },
-  ],
-};
-
 export default function QuizComponent() {
   const [quizType, setQuizType] = useState(''); // 'topic' or 'course'
   const [inputTopic, setInputTopic] = useState(''); // For user input on topic-based quiz
@@ -25,13 +13,17 @@ export default function QuizComponent() {
   const [skippedQuestions, setSkippedQuestions] = useState([]);
   const [showReport, setShowReport] = useState(false);
 
-  // This will dynamically fetch questions based on input or selection
+  // This will fetch questions from the Flask API
   const fetchQuestions = (selectedTopic) => {
-    if (quizData[selectedTopic]) {
-      setQuestions(quizData[selectedTopic]);
-    } else {
-      setQuestions([]); // Handle error case for invalid topic/course
-    }
+    axios
+      .get(`http://localhost:5000/api/quiz?topic=${selectedTopic}`)
+      .then((response) => {
+        setQuestions(response.data); // Update questions with the response
+      })
+      .catch((error) => {
+        console.error("Error fetching quiz questions:", error);
+        setQuestions([]); // If there's an error, clear the questions
+      });
   };
 
   const handleStartQuiz = () => {
