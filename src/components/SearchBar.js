@@ -7,6 +7,7 @@ import {
   Grid,
   Card,
   CardContent,
+  CircularProgress,
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
@@ -15,59 +16,39 @@ export default function SearchBar() {
   const [query, setQuery] = useState(""); // Search query state
   const [searchResults, setSearchResults] = useState([]); // Results state
   const [noResults, setNoResults] = useState(false); // No results state
-
-  // Dummy data for courses
-  const allCourses = [
-    {
-      id: "introduction-to-ai",
-      title: "Introduction to AI",
-      description: "Learn the basics of artificial intelligence.",
-    },
-    {
-      id: "web-development",
-      title: "Web Development for Beginners",
-      description: "Learn how to build websites from scratch.",
-    },
-    {
-      id: "data-science-python",
-      title: "Data Science with Python",
-      description: "Explore data science techniques using Python.",
-    },
-    {
-      id: "machine-learning",
-      title: "Machine Learning Basics",
-      description: "Understand the fundamentals of machine learning.",
-    },
-    {
-      id: "cloud-computing",
-      title: "Cloud Computing 101",
-      description: "An introduction to cloud computing.",
-    },
-  ];
+  const [loading, setLoading] = useState(false); // Loading state
 
   // Function to handle search
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!query) {
       setSearchResults([]);
       setNoResults(false);
       return;
     }
 
-    const results = allCourses.filter(
-      (course) =>
-        course.title.toLowerCase().includes(query.toLowerCase()) ||
-        course.description.toLowerCase().includes(query.toLowerCase())
-    );
+    setLoading(true); // Start loading state
+    try {
+      const response = await fetch(`http://localhost:5000/api/courses/search?query=${encodeURIComponent(query)}`);
 
-    setSearchResults(results);
-    setNoResults(results.length === 0);
+      if (!response.ok) {
+        throw new Error("Failed to fetch courses");
+      }
+
+      const data = await response.json();
+
+      setSearchResults(data.courses); // Assume the API returns an object with a 'courses' array
+      setNoResults(data.courses.length === 0);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      setNoResults(true);
+    } finally {
+      setLoading(false); // End loading state
+    }
   };
 
   return (
     <Box sx={{ padding: "20px", marginTop: "20px" }}>
-      <Box
-        sx={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}
-      >
+      <Box sx={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
         <TextField
           variant="outlined"
           label="Search for courses..."
@@ -87,20 +68,23 @@ export default function SearchBar() {
         </Button>
       </Box>
 
+      {/* Loading Spinner */}
+      {loading && (
+        <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+          <CircularProgress />
+        </Box>
+      )}
+
       {/* Display Search Results */}
       <Box>
-        {searchResults.length > 0 && (
+        {searchResults.length > 0 && !loading && (
           <Grid container spacing={3}>
             {searchResults.map((course, index) => (
               <Grid item xs={12} md={6} key={index}>
                 <Card>
                   <CardContent>
                     <Typography variant="h6">{course.title}</Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      gutterBottom
-                    >
+                    <Typography variant="body2" color="textSecondary" gutterBottom>
                       {course.description}
                     </Typography>
                     <Link to={`/course-details/${course.id}`}>
@@ -123,7 +107,7 @@ export default function SearchBar() {
         )}
 
         {/* No Results Found */}
-        {noResults && (
+        {noResults && !loading && (
           <Typography
             variant="body1"
             align="center"

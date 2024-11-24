@@ -18,7 +18,20 @@ import UserIcon from '@mui/icons-material/Person';
 import ChatIcon from '@mui/icons-material/Chat';
 import SupportIcon from '@mui/icons-material/Support';
 import MicIcon from '@mui/icons-material/Mic';
-import ChatButton from '../components/ChatButton ';
+
+// Function to convert markdown-like **bold**, *italic*, and new lines to HTML
+const formatText = (text) => {
+  // Convert **bold** to <strong>
+  let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+  // Convert *italic* to <em>
+  formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+  // Convert newlines to <br />
+  formattedText = formattedText.replace(/\n/g, '<br />');
+
+  return formattedText;
+};
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
@@ -48,21 +61,47 @@ const Chatbot = () => {
     }
   }, []);
 
-  const handleSend = () => {
+  // Function to send message to Flask API
+  const handleSend = async () => {
     if (input.trim()) {
+      // Update state with user's message
       setMessages((prev) => [...prev, { text: input, sender: 'user' }]);
       setInput('');
       setTyping(true);
 
-      // Simulate a delay for the bot's response
-      setTimeout(() => {
-        const botResponse = "This is a sample response from AI."; // Mock response
-        setMessages((prev) => [...prev, { text: botResponse, sender: 'bot' }]);
+      // Make a POST request to Flask API to get bot response
+      try {
+        const response = await fetch('http://127.0.0.1:5000/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ message: input }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch bot response');
+        }
+
+        const data = await response.json();
+        const botResponse = data.response; // Get the response from Flask
+
+        // Format the bot's response using the formatText function
+        const formattedResponse = formatText(botResponse);
+
+        // Simulate a delay before displaying bot response
+        setTimeout(() => {
+          setMessages((prev) => [...prev, { text: formattedResponse, sender: 'bot' }]);
+          setTyping(false);
+        }, 1000);
+      } catch (error) {
+        console.error('Error sending message:', error);
         setTyping(false);
-      }, 1000); // Simulate bot response delay
+      }
     }
   };
 
+  // Function to handle microphone click (speech-to-text)
   const handleMicClick = () => {
     if (recognition) {
       recognition.start();
@@ -83,9 +122,17 @@ const Chatbot = () => {
             {messages.map((msg, index) => (
               <Box key={index} sx={{ display: 'flex', alignItems: 'center', marginBottom: '10px', justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start' }}>
                 {msg.sender === 'bot' && <Avatar sx={{ marginRight: '10px' }}><RobotIcon /></Avatar>}
-                <Box sx={{ backgroundColor: msg.sender === 'user' ? '#3f51b5' : '#e0e0e0', color: msg.sender === 'user' ? '#fff' : '#000', padding: '10px 15px', borderRadius: '20px', maxWidth: '70%', wordWrap: 'break-word' }}>
-                  {msg.text}
-                </Box>
+                <Box
+                  sx={{
+                    backgroundColor: msg.sender === 'user' ? '#3f51b5' : '#e0e0e0',
+                    color: msg.sender === 'user' ? '#fff' : '#000',
+                    padding: '10px 15px',
+                    borderRadius: '20px',
+                    maxWidth: '70%',
+                    wordWrap: 'break-word',
+                  }}
+                  dangerouslySetInnerHTML={{ __html: msg.text }} // Render formatted HTML
+                />
                 {msg.sender === 'user' && <Avatar sx={{ marginLeft: '10px' }}><UserIcon /></Avatar>}
               </Box>
             ))}
@@ -111,7 +158,7 @@ const Chatbot = () => {
                   <Button onClick={handleMicClick} sx={{ p: 1 }}>
                     <MicIcon />
                   </Button>
-                )
+                ),
               }}
             />
             <Button
@@ -124,7 +171,6 @@ const Chatbot = () => {
             </Button>
           </Box>
         </Card>
-       
       </Container>
       <Footer />
     </div>

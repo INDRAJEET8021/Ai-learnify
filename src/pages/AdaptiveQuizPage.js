@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -11,11 +11,12 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  CircularProgress,
 } from "@mui/material";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChatButton from "../components/ChatButton ";
 
 const courses = [
@@ -23,43 +24,61 @@ const courses = [
   { id: "web-development", name: "Web Development for Beginners" },
 ];
 
-const mockQuestions = [
-  {
-    id: 1,
-    question: "What is the capital of France?",
-    options: ["Paris", "London", "Rome", "Berlin"],
-    answer: "Paris",
-  },
-  {
-    id: 2,
-    question: "Who developed the theory of relativity?",
-    options: ["Newton", "Einstein", "Galileo", "Curie"],
-    answer: "Einstein",
-  },
-  {
-    id: 3,
-    question: "Which planet is known as the Red Planet?",
-    options: ["Mars", "Jupiter", "Earth", "Venus"],
-    answer: "Mars",
-  },
-];
-
 export default function AdaptiveQuizPage() {
   const [selectedCourse, setSelectedCourse] = useState("");
+  const [quizData, setQuizData] = useState([]);
   const [topic, setTopic] = useState("");
   const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [questionStatus, setQuestionStatus] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const totalQuestions = mockQuestions.length;
+  const totalQuestions = quizData.length;
+
+  // Fetch quiz data from Flask API
+  const fetchQuizData = async (course) => {
+    try {
+      if (!course) {
+        throw new Error("Course is not selected or topic is not provided.");
+      }
+
+      setLoading(true);
+      const response = await fetch(
+        `http://localhost:5000/quiz?topic=${encodeURIComponent(course)}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch quiz data: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      // Ensure quiz data is in the correct format
+      if (!data || !Array.isArray(data[0]?.quiz)) {
+        throw new Error("Invalid quiz data structure.");
+      }
+
+      // Access quiz data from the response
+      const quizData = data[0].quiz;
+
+      // Set quiz data and initialize question status
+      setQuizData(quizData);
+      setQuestionStatus(new Array(quizData.length).fill("unanswered"));
+    } catch (error) {
+      console.error("Error fetching quiz data:", error);
+      alert("Failed to load quiz data. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Start Quiz logic
-  const handleStartQuiz = () => {
+  const handleStartQuiz = async () => {
     if (selectedCourse || topic) {
       setQuizStarted(true);
-      setQuestionStatus(mockQuestions.map(() => "unanswered"));
+      fetchQuizData(selectedCourse || topic);
     }
   };
 
@@ -70,6 +89,7 @@ export default function AdaptiveQuizPage() {
     setTopic("");
     setCurrentQuestionIndex(0);
     setAnswers([]);
+    setQuizData([]); // Reset quiz data
   };
 
   // Handle Question Answer
@@ -105,11 +125,11 @@ export default function AdaptiveQuizPage() {
 
   const handleFinishQuiz = () => {
     const correctAnswers = answers.filter(
-      (answer, index) => answer === mockQuestions[index].answer
+      (answer, index) => answer === quizData[index].correct
     ).length;
 
     navigate("/quiz-report", {
-      state: { score: correctAnswers, totalQuestions: mockQuestions.length },
+      state: { score: correctAnswers, totalQuestions: quizData.length },
     });
   };
 
@@ -120,7 +140,7 @@ export default function AdaptiveQuizPage() {
         <Typography
           variant="h4"
           gutterBottom
-          sx={{ textAlign: "center", fontWeight: "bold", color: "#1976d2" }} // Changed color
+          sx={{ textAlign: "center", fontWeight: "bold", color: "#1976d2" }}
         >
           Test Yourself!
         </Typography>
@@ -128,15 +148,17 @@ export default function AdaptiveQuizPage() {
         {!quizStarted ? (
           <Grid container spacing={3} sx={{ marginTop: "30px" }}>
             <Grid item xs={12} md={6}>
-              <Paper elevation={3} sx={{ padding: "20px", borderRadius: "12px", backgroundColor: "#e3f2fd", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)", height: "300px" }}>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    marginBottom: "20px",
-                    fontWeight: "bold",
-                    color: "#1976d2", // Changed color
-                  }}
-                >
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: "20px",
+                  borderRadius: "12px",
+                  backgroundColor: "#e3f2fd",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+                  height: "300px",
+                }}
+              >
+                <Typography variant="h5" sx={{ marginBottom: "20px", fontWeight: "bold", color: "#1976d2" }}>
                   Course-Based Quiz
                 </Typography>
                 <Accordion>
@@ -148,11 +170,7 @@ export default function AdaptiveQuizPage() {
                       {courses.map((course) => (
                         <Grid item xs={12} key={course.id}>
                           <Button
-                            variant={
-                              selectedCourse === course.id
-                                ? "contained"
-                                : "outlined"
-                            }
+                            variant={selectedCourse === course.id ? "contained" : "outlined"}
                             onClick={() => {
                               setSelectedCourse(course.id);
                               setTopic(""); // Reset topic if course is selected
@@ -161,16 +179,11 @@ export default function AdaptiveQuizPage() {
                             sx={{
                               padding: "15px",
                               fontWeight: "bold",
-                              backgroundColor:
-                                selectedCourse === course.id ? "#1976d2" : "white", // Changed color
-                              color:
-                                selectedCourse === course.id ? "white" : "#1976d2", // Changed color
-                              border: "2px solid #1976d2", // Changed color
+                              backgroundColor: selectedCourse === course.id ? "#1976d2" : "white",
+                              color: selectedCourse === course.id ? "white" : "#1976d2",
+                              border: "2px solid #1976d2",
                               "&:hover": {
-                                backgroundColor:
-                                  selectedCourse === course.id
-                                    ? "#115293" // Darker shade for hover
-                                    : "#e0f2f1",
+                                backgroundColor: selectedCourse === course.id ? "#115293" : "#e0f2f1",
                               },
                             }}
                           >
@@ -185,15 +198,17 @@ export default function AdaptiveQuizPage() {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Paper elevation={3} sx={{ padding: "20px", borderRadius: "12px", backgroundColor: "#e3f2fd", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)", height: "300px" }}>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    marginBottom: "20px",
-                    fontWeight: "bold",
-                    color: "#1976d2", // Changed color
-                  }}
-                >
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: "20px",
+                  borderRadius: "12px",
+                  backgroundColor: "#e3f2fd",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+                  height: "300px",
+                }}
+              >
+                <Typography variant="h5" sx={{ marginBottom: "20px", fontWeight: "bold", color: "#1976d2" }}>
                   Topic-Based Quiz
                 </Typography>
                 <TextField
@@ -210,6 +225,11 @@ export default function AdaptiveQuizPage() {
               </Paper>
             </Grid>
           </Grid>
+        ) : loading ? (
+          // Show loader while fetching quiz data
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+            <CircularProgress size={60} sx={{ color: "#1976d2" }} />
+          </Box>
         ) : (
           <Box>
             {/* Back Button */}
@@ -217,7 +237,7 @@ export default function AdaptiveQuizPage() {
               variant="contained"
               color="secondary"
               onClick={handleBackToSelection}
-              sx={{ marginBottom: "20px", backgroundColor: "#1976d2" }} // Changed color
+              sx={{ marginBottom: "20px", backgroundColor: "#1976d2" }}
             >
               <KeyboardBackspaceIcon />
               Back
@@ -232,24 +252,28 @@ export default function AdaptiveQuizPage() {
               sx={{ marginY: "10px" }}
             />
 
-            <Card sx={{ marginY: "20px", padding: "20px", backgroundColor: "#ffffff", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)" }}>
+            <Card
+              sx={{
+                marginY: "20px",
+                padding: "20px",
+                backgroundColor: "#ffffff",
+                borderRadius: "12px",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              }}
+            >
               <Typography variant="h6" sx={{ marginBottom: "20px", fontWeight: "bold", color: "#1976d2" }}>
-                {mockQuestions[currentQuestionIndex].question}
+                {quizData[currentQuestionIndex].question}
               </Typography>
               <Grid container spacing={2}>
-                {mockQuestions[currentQuestionIndex].options.map((option) => (
+                {quizData[currentQuestionIndex].options.map((option) => (
                   <Grid item xs={6} key={option}>
                     <Button
-                      variant={
-                        answers[currentQuestionIndex] === option
-                          ? "contained"
-                          : "outlined"
-                      }
+                      variant={answers[currentQuestionIndex] === option ? "contained" : "outlined"}
                       onClick={() => handleAnswer(option)}
                       fullWidth
                       sx={{
                         padding: "15px",
-                        border: "2px solid #1976d2", // Changed color
+                        border: "2px solid #1976d2",
                         "&:hover": {
                           backgroundColor: "#e0f2f1",
                         },
@@ -268,20 +292,23 @@ export default function AdaptiveQuizPage() {
                 variant="outlined"
                 onClick={handlePrevious}
                 disabled={currentQuestionIndex === 0}
-                sx={{ padding: "10px", borderColor: "#1976d2", color: "#1976d2" }} // Changed color
+                sx={{
+                  padding: "10px",
+                  borderColor: "#1976d2",
+                  color: "#1976d2",
+                }}
               >
                 Previous
               </Button>
 
-             
               <Button
                 variant="contained"
                 onClick={handleSkip}
                 sx={{
                   padding: "10px",
-                  backgroundColor: "#1976d2", // Changed color
+                  backgroundColor: "#1976d2",
                   "&:hover": {
-                    backgroundColor: "#115293", // Darker shade for hover
+                    backgroundColor: "#115293",
                   },
                 }}
               >
@@ -294,9 +321,9 @@ export default function AdaptiveQuizPage() {
                 disabled={currentQuestionIndex === totalQuestions - 1}
                 sx={{
                   padding: "10px",
-                  backgroundColor: "#1976d2", // Changed color
+                  backgroundColor: "#1976d2",
                   "&:hover": {
-                    backgroundColor: "#115293", // Darker shade for hover
+                    backgroundColor: "#115293",
                   },
                 }}
               >
@@ -310,7 +337,7 @@ export default function AdaptiveQuizPage() {
                 color="secondary"
                 fullWidth
                 onClick={handleFinishQuiz}
-                sx={{ marginTop: "20px", padding: "12px", fontSize: "16px", backgroundColor: "#1976d2" }} // Changed color
+                sx={{ marginTop: "20px", padding: "12px", fontSize: "16px", backgroundColor: "#1976d2" }}
               >
                 Finish Quiz
               </Button>
@@ -318,7 +345,6 @@ export default function AdaptiveQuizPage() {
           </Box>
         )}
 
-        {/* Start Quiz Button */}
         {!quizStarted && (
           <Button
             variant="contained"
@@ -331,17 +357,20 @@ export default function AdaptiveQuizPage() {
               right: "20px",
               padding: "8px 16px",
               fontSize: "14px",
-              backgroundColor: "#1976d2", // Changed color
+              backgroundColor: "#1976d2",
               "&:hover": {
-                backgroundColor: "#115293", // Darker shade for hover
+                backgroundColor: "#115293",
               },
+              zIndex: 999,
             }}
           >
             Start Quiz
           </Button>
         )}
-        <ChatButton/>
+
       </Box>
+
+      <ChatButton />
     </div>
   );
 }

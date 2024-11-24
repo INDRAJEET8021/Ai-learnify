@@ -1,0 +1,327 @@
+[
+    {
+        "id": "machine-learning-full-course-roadmap",
+        "title": "Machine Learning Full Course Roadmap",
+        "description": "A comprehensive course covering the fundamentals and advanced topics in machine learning.",
+        "modules": [
+            {
+                "moduleTitle": "Introduction to Machine Learning",
+                "headings": [
+                    "What is Machine Learning?",
+                    "Types of Machine Learning (Supervised, Unsupervised, Reinforcement)",
+                    "Supervised Learning: Regression and Classification",
+                    "Unsupervised Learning: Clustering and Dimensionality Reduction",
+                    "Reinforcement Learning: An Overview",
+                    "Ethics in Machine Learning",
+                    "Machine Learning Applications",
+                    "Setting up your Machine Learning Environment",
+                    "Choosing the Right Programming Language (Python, R)",
+                    "Essential Python Libraries (NumPy, Pandas, Scikit-learn, Matplotlib)",
+                    "Introduction to Jupyter Notebooks"
+                ]
+            },
+            {
+                "moduleTitle": "Mathematical Foundations of Machine Learning",
+                "headings": [
+                    "Linear Algebra Essentials (Vectors, Matrices, Operations)",
+                    "Calculus Refresher (Derivatives, Gradients)",
+                    "Probability and Statistics (Distributions, Hypothesis Testing)",
+                    "Bayesian Statistics",
+                    "Information Theory Basics",
+                    "Linear Regression: Model Building and Evaluation",
+                    "Regularization Techniques (L1, L2)",
+                    "Polynomial Regression",
+                    "Handling Overfitting and Underfitting",
+                    "Bias-Variance Tradeoff"
+                ]
+            },
+            {
+                "moduleTitle": "Supervised Learning Algorithms",
+                "headings": [
+                    "Linear Regression",
+                    "Logistic Regression",
+                    "Support Vector Machines (SVMs)",
+                    "Decision Trees",
+                    "Random Forests",
+                    "Naive Bayes",
+                    "K-Nearest Neighbors (KNN)",
+                    "Model Selection and Evaluation Metrics (Accuracy, Precision, Recall, F1-score, AUC)",
+                    "Cross-Validation Techniques (k-fold, stratified k-fold)",
+                    "Hyperparameter Tuning",
+                    "Regularization and Feature Selection",
+                    "Dealing with Imbalanced Datasets"
+                ]
+            },
+            {
+                "moduleTitle": "Unsupervised Learning Algorithms",
+                "headings": [
+                    "Clustering Techniques (K-means, Hierarchical Clustering, DBSCAN)",
+                    "Dimensionality Reduction Techniques (PCA, t-SNE)",
+                    "Anomaly Detection",
+                    "Association Rule Mining",
+                    "Recommendation Systems"
+                ]
+            },
+            {
+                "moduleTitle": "Model Evaluation and Selection",
+                "headings": [
+                    "Metrics for Classification (Accuracy, Precision, Recall, F1-score, AUC)",
+                    "Metrics for Regression (RMSE, MAE, R-squared)",
+                    "Cross-Validation Techniques",
+                    "Hyperparameter Tuning",
+                    "Bias-Variance Tradeoff",
+                    "Model Selection Strategies",
+                    "Ensemble Methods (Bagging, Boosting)",
+                    "Stacking and Blending",
+                    "Handling Overfitting and Underfitting"
+                ]
+            },
+            {
+                "moduleTitle": "Deep Learning",
+                "headings": [
+                    "Introduction to Neural Networks",
+                    "Perceptrons and Multilayer Perceptrons (MLPs)",
+                    "Activation Functions",
+                    "Backpropagation",
+                    "Optimization Algorithms (Gradient Descent, Adam)",
+                    "Convolutional Neural Networks (CNNs) for Image Recognition",
+                    "Recurrent Neural Networks (RNNs) for Sequence Data",
+                    "Long Short-Term Memory (LSTM) Networks",
+                    "Generative Adversarial Networks (GANs)",
+                    "Autoencoders",
+                    "Transfer Learning",
+                    "Deep Learning Frameworks (TensorFlow, PyTorch)"
+                ]
+            },
+            {
+                "moduleTitle": "Advanced Machine Learning Topics",
+                "headings": [
+                    "Natural Language Processing (NLP) basics",
+                    "Time Series Analysis",
+                    "Reinforcement Learning",
+                    "Generative Models",
+                    "Explainable AI (XAI)",
+                    "Fairness and Bias in Machine Learning",
+                    "Deploying Machine Learning Models",
+                    "Cloud Computing for Machine Learning"
+                ]
+            },
+            {
+                "moduleTitle": "Capstone Project",
+                "headings": [
+                    "Project Proposal",
+                    "Data Collection and Preprocessing",
+                    "Model Selection and Training",
+                    "Model Evaluation and Deployment",
+                    "Project Presentation and Report Writing"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "artificial-intelligence-full-course-roadmap",
+        "title": "Artificial Intelligence Full Course Roadmap",
+        "description": "A comprehensive course covering the fundamentals and advanced concepts of Artificial Intelligence.",
+        "modules": [
+            {
+                "moduleTitle": "Introduction to AI",
+                "headings": [
+                    "What is AI?",
+                    "Types of AI",
+                    "History of AI",
+                    "AI vs. Human Intelligence",
+                    "Applications of AI",
+                    "Ethical Considerations in AI",
+                    "AI in Everyday Life",
+                    "The Future of AI",
+                    "AI and Society",
+                    "AI and the Workforce"
+                ]
+            },
+            {
+                "moduleTitle": "Mathematical Foundations of AI",
+                "headings": [
+                    "Linear Algebra",
+                    "Calculus",
+                    "Probability and Statistics",
+                    "Discrete Mathematics",
+                    "Information Theory",
+                    "Graph Theory",
+                    "Set Theory",
+                    "Logic"
+                ]
+            },
+            {
+                "moduleTitle": "Programming for AI",
+                "headings": [
+                    "Python for AI",
+                    "Data Structures and Algorithms",
+                    "Object-Oriented Programming",
+                    "Functional Programming",
+                    "NumPy",
+                    "Pandas",
+                    "Scikit-learn",
+                    "TensorFlow",
+                    "PyTorch",
+                    "Keras",
+                    "Debugging and Testing",
+                    "Version Control",
+                    "Software Engineering Principles"
+                ]
+            },
+            {
+                "moduleTitle": "Machine Learning",
+                "headings": [
+                    "Supervised Learning",
+                    "Unsupervised Learning",
+                    "Reinforcement Learning",
+                    "Regression",
+                    "Classification",
+                    "Clustering",
+                    "Dimensionality Reduction",
+                    "Model Selection",
+                    "Bias-Variance Tradeoff",
+                    "Regularization",
+                    "Cross-Validation",
+                    "Hyperparameter Tuning",
+                    "Evaluation Metrics",
+                    "Overfitting and Underfitting",
+                    "Ensemble Methods",
+                    "Bagging",
+                    "Boosting",
+                    "Stacking",
+                    "Decision Trees",
+                    "Random Forests",
+                    "Support Vector Machines",
+                    "Naive Bayes",
+                    "K-Nearest Neighbors",
+                    "Linear Regression",
+                    "Logistic Regression",
+                    "Neural Networks",
+                    "Deep Learning",
+                    "Convolutional Neural Networks",
+                    "Recurrent Neural Networks",
+                    "Generative Adversarial Networks",
+                    "Autoencoders",
+                    "Transfer Learning",
+                    "Explainable AI (XAI)",
+                    "Model Interpretability"
+                ]
+            },
+            {
+                "moduleTitle": "Deep Learning",
+                "headings": [
+                    "Introduction to Neural Networks",
+                    "Perceptron",
+                    "Multilayer Perceptron (MLP)",
+                    "Backpropagation",
+                    "Activation Functions",
+                    "Regularization Techniques",
+                    "Optimization Algorithms",
+                    "Stochastic Gradient Descent (SGD)",
+                    "Adam",
+                    "RMSprop",
+                    "Dropout",
+                    "Batch Normalization",
+                    "Convolutional Neural Networks (CNNs)",
+                    "Recurrent Neural Networks (RNNs)",
+                    "Long Short-Term Memory (LSTM)",
+                    "Gated Recurrent Units (GRUs)",
+                    "Autoencoders",
+                    "Generative Adversarial Networks (GANs)",
+                    "Transfer Learning",
+                    "Deep Reinforcement Learning",
+                    "Deep Learning Frameworks (TensorFlow, PyTorch, Keras)",
+                    "Building and Training Deep Learning Models",
+                    "Evaluating Deep Learning Models",
+                    "Debugging and Troubleshooting Deep Learning Models"
+                ]
+            },
+            {
+                "moduleTitle": "Natural Language Processing (NLP)",
+                "headings": [
+                    "Introduction to NLP",
+                    "Text Preprocessing",
+                    "Tokenization",
+                    "Stemming",
+                    "Lemmatization",
+                    "Stop Word Removal",
+                    "Part-of-Speech Tagging",
+                    "Named Entity Recognition",
+                    "Sentiment Analysis",
+                    "Text Classification",
+                    "Machine Translation",
+                    "Chatbots",
+                    "Word Embeddings",
+                    "Word2Vec",
+                    "GloVe",
+                    "FastText",
+                    "Transformer Networks",
+                    "BERT",
+                    "GPT",
+                    "Recurrent Neural Networks for NLP",
+                    "Long Short-Term Memory (LSTM) Networks for NLP",
+                    "Gated Recurrent Units (GRU) Networks for NLP",
+                    "Sequence-to-Sequence Models",
+                    "Attention Mechanisms",
+                    "Applications of NLP"
+                ]
+            },
+            {
+                "moduleTitle": "Computer Vision",
+                "headings": [
+                    "Introduction to Computer Vision",
+                    "Image Processing",
+                    "Feature Extraction",
+                    "Object Detection",
+                    "Object Recognition",
+                    "Image Segmentation",
+                    "Image Classification",
+                    "Convolutional Neural Networks (CNNs) for Computer Vision",
+                    "Recurrent Neural Networks (RNNs) for Computer Vision",
+                    "Generative Adversarial Networks (GANs) for Computer Vision",
+                    "Applications of Computer Vision"
+                ]
+            },
+            {
+                "moduleTitle": "Robotics and AI",
+                "headings": [
+                    "Introduction to Robotics",
+                    "Robot Control",
+                    "Robot Programming",
+                    "Sensors and Actuators",
+                    "Robot Perception",
+                    "Robot Motion Planning",
+                    "Robot Navigation",
+                    "AI in Robotics",
+                    "Reinforcement Learning in Robotics",
+                    "Applications of Robotics"
+                ]
+            },
+            {
+                "moduleTitle": "AI Projects and Applications",
+                "headings": [
+                    "Project Ideas",
+                    "Project Planning",
+                    "Data Collection",
+                    "Data Cleaning",
+                    "Model Training",
+                    "Model Evaluation",
+                    "Model Deployment",
+                    "Case Studies"
+                ]
+            },
+            {
+                "moduleTitle": "Future Trends in AI",
+                "headings": [
+                    "Artificial General Intelligence (AGI)",
+                    "Explainable AI (XAI)",
+                    "Quantum AI",
+                    "Neuro-Symbolic AI",
+                    "AI Safety",
+                    "Ethical Considerations in AI"
+                ]
+            }
+        ]
+    }
+]
